@@ -1,0 +1,171 @@
+<?php namespace Inetis\Localise\Console;
+
+use Illuminate\Support\Collection;
+use System\Classes\PluginManager;
+use Yaml;
+use Lang;
+use File;
+use Illuminate\Console\Command;
+use RainLab\Builder\Classes\LocalizationModel;
+use Symfony\Component\Console\Input\InputArgument;
+
+class AddStrings extends Command
+{
+    /**
+     * @var string The console command name.
+     */
+    protected $name = 'localise:addstrings';
+
+    /**
+     * @var string The console command description.
+     */
+    protected $description = 'Extract language keys from Yaml and create a language file';
+
+    /**
+     * @var language code.
+     */
+    protected $languageCode;
+
+    /**
+     * @var plugin name
+     */
+    protected $pluginName;
+
+    /**
+     * @var plugin directory
+     */
+    protected $pluginDir;
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $this->initValues();
+        $files = $this->getAllFiles();
+        $keys  = $this->extractYaml($files['yaml']);
+        $this->CreateYamlFileIfNotExist();
+        $this->addKeysToYaml($keys);
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return [
+            ['pluginName', InputArgument::REQUIRED, 'Plugin name'],
+            ['languageCode', InputArgument::OPTIONAL, 'Language en/fr/..'],
+        ];
+    }
+
+    /**
+     * Recursive get all files
+     *
+     * @param $pluginDir
+     *
+     * @return array
+     */
+    private function getAllFiles()
+    {
+        $files             = array();
+        $directoryIterator = new \RecursiveDirectoryIterator($this->pluginDir);
+        foreach (new \RecursiveIteratorIterator($directoryIterator) as $filename => $file) {
+            if ($file->isFile()) {
+                $files[$file->getExtension()][] = $file;
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Extract key from YAML files
+     *
+     * @param $pluginFiles
+     * @param $localisationKeys
+     * @param $pluginNameLowerCase
+     *
+     * @return static
+     */
+    private function extractYaml($yamlFiles)
+    {
+        $localisationKeys = array();
+        foreach ($yamlFiles as $yamlFile) {
+            $localisationKeys[] = collect(Yaml::parseFile($yamlFile));
+        }
+        $localisationKeys = collect($localisationKeys);
+
+        $keys = $localisationKeys->flatten()->filter(function ($value, $key) {
+            return str_contains($value, strtolower($this->pluginName) . '::');
+        });
+        $keys = $keys->values()->unique();
+
+        return $keys;
+    }
+
+    /**
+     * Add new keys to the language file
+     *
+     * @param $pluginName
+     * @param $keys
+     * @param $pluginNameLowerCase
+     *
+     * @return int
+     */
+    private function addKeysToYaml(Collection $keys)
+    {
+        $pluginNameLowerCase = strtolower($this->pluginName);
+        $numberOfAddedKeys   = 0;
+        $model               = new LocalizationModel();
+        $model->setPluginCode($this->pluginName);
+
+        foreach ($keys->sort() as $value) {
+            $model->load($this->languageCode);
+            $value    = str_replace($pluginNameLowerCase . '::lang.', '', $value);
+            $keyValue = array_get($model->getOriginalStringsArray(), $value, 0);
+
+            if (!$keyValue) {
+                $content = explode('.', $value)[1];
+                $model->createStringAndSave($value, 'NEW_' . $content);
+
+                $this->output->writeln($value);
+                $numberOfAddedKeys++;
+            }
+        }
+
+        $this->output->writeln($numberOfAddedKeys . ' keys have been added to ');
+        $this->output->writeln($this->pluginDir . '/lang/' . $this->languageCode.'/lang.php');
+
+        return $numberOfAddedKeys;
+    }
+
+    /**
+     * @return string
+     */
+    private function initValues()
+    {
+        $this->pluginName   = $this->argument('pluginName');
+        $this->pluginName   = PluginManager::instance()->normalizeIdentifier($this->pluginName);
+        $this->languageCode = strtolower($this->argument('languageCode'));
+
+        if (!PluginManager::instance()->exists($this->pluginName)) {
+            throw new \InvalidArgumentException(sprintf('Plugin "%s" not found.', $this->pluginName));
+        }
+        $this->pluginDir = PluginManager::instance()->getPluginPath($this->pluginName);
+    }
+
+    private function CreateYamlFileIfNotExist()
+    {
+        if (!LocalizationModel::languageFileExists($this->pluginName, $this->languageCode)) {
+            $languageDirectory = $this->pluginDir . '/lang/' . $this->languageCode;
+            File::makeDirectory($languageDirectory);
+            File::put($languageDirectory . '/lang.php', '<?php return [];'); // populate with an empty array
+            $this->output->writeln($languageDirectory . '/lang.php file created');
+        }
+    }
+}
