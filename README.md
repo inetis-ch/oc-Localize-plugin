@@ -14,7 +14,7 @@ inetis_emergency:
 
 ## Command
 ```
-php artisan localise:addstrings {Plugin.Name} {en}
+php artisan localize:addstrings {Plugin.Name} {en}
 ```
 
 Parameter | Definition | Exemple 
