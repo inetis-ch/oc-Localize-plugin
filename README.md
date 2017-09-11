@@ -1,4 +1,4 @@
-# oc-Localise-plugin
+# oc-Localize-plugin
 New artisan command to create language file from Yaml key
 
 This command will scan all your Yaml files. It will look for new language keys and add them into your `lang.php` file. 
