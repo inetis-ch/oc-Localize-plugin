@@ -1,25 +1,28 @@
 # oc-Localise-plugin
 New artisan command to create language file from Yaml key
 
-This command will scan all your Yaml files. It will look for new language keys. 
+This command will scan all your Yaml files. It will look for new language keys and add them into your `lang.php` file. 
 
 
-`yaml
+```yaml
 inetis_emergency:
     label: inetis.transitec::lang.user.emergency
     span: auto
     type: text
     tab : Profile
-`
+```
 
 ## Command
-`
+```
 php artisan localise:addstrings {Plugin.Name} {en}
-`
-First parameter : name of the plugin ex: Rainlab.
-Second parameter : language abreviation ex: en
+```
 
-If the destination language don't exist. This pluging will create it.
+Parameter | Definition | Exemple 
+------------- | ------------- | -------------
+First | name of the plugin | Rainlab.Page
+Second | language abreviation | en
+
+If the destination language doesn't exist. This pluging will create it.
 
 
 ## Dependency 
