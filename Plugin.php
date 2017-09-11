@@ -1,10 +1,10 @@
-<?php namespace Inetis\Localise;
+<?php namespace Inetis\Localize;
 
 use Backend;
 use System\Classes\PluginBase;
 
 /**
- * Localise Plugin Information File
+ * Localize Plugin Information File
  */
 class Plugin extends PluginBase
 {
@@ -19,7 +19,7 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'Localise',
+            'name'        => 'Localize',
             'description' => 'No description provided yet...',
             'author'      => 'Inetis',
             'icon'        => 'icon-leaf'
@@ -33,7 +33,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
-        $this->registerConsoleCommand('localise:addstrings', 'Inetis\Localise\Console\AddStrings');
+        $this->registerConsoleCommand('localize:addstrings', 'Inetis\Localize\Console\AddStrings');
     }
 
     /**
@@ -67,8 +67,8 @@ class Plugin extends PluginBase
         return []; // Remove this line to activate
 
         return [
-            'inetis.localise.some_permission' => [
-                'tab' => 'Localise',
+            'inetis.localize.some_permission' => [
+                'tab' => 'Localize',
                 'label' => 'Some permission'
             ],
         ];
@@ -84,11 +84,11 @@ class Plugin extends PluginBase
         return []; // Remove this line to activate
 
         return [
-            'localise' => [
-                'label'       => 'Localise',
-                'url'         => Backend::url('inetis/localise/mycontroller'),
+            'localize' => [
+                'label'       => 'Localize',
+                'url'         => Backend::url('inetis/localize/mycontroller'),
                 'icon'        => 'icon-leaf',
-                'permissions' => ['inetis.localise.*'],
+                'permissions' => ['inetis.localize.*'],
                 'order'       => 500,
             ],
         ];
