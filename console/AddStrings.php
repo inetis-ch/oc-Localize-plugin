@@ -1,4 +1,4 @@
-<?php namespace Inetis\Localise\Console;
+<?php namespace Inetis\Localize\Console;
 
 use Illuminate\Support\Collection;
 use System\Classes\PluginManager;
@@ -14,7 +14,7 @@ class AddStrings extends Command
     /**
      * @var string The console command name.
      */
-    protected $name = 'localise:addstrings';
+    protected $name = 'localize:addstrings';
 
     /**
      * @var string The console command description.
