@@ -7,7 +7,7 @@ By example if you have the following file inside your plugin, this command will 
 string to your lang file with for default value `NEW_name` that help you to quickly find not already translated items.
 
 ```yaml
-inetis_emergency:
+user_name:
     label: inetis.testplugin::lang.user.name
     span: auto
     type: text
@@ -22,9 +22,9 @@ php artisan localize:addstrings {Plugin.Name} {Lang}
 Parameter | Definition | Exemple 
 ------------- | ------------- | -------------
 First | name of the plugin | Rainlab.Page
-Second | language abreviation | en
+Second | language abbreviation | en
 
-If the destination language doesn't exist. This pluging will create it.
+If the destination language doesn't exist. This plugin will create it.
 
 
 ## Dependency 
