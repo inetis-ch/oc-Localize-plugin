@@ -21,7 +21,8 @@ class Plugin extends PluginBase
             'name'        => 'Localize',
             'description' => 'Artisan command to generate language files from localization strings inside Yaml files',
             'author'      => 'inetis',
-            'icon'        => 'icon-language'
+            'icon'        => 'icon-language',
+            'homepage'    => 'https://octobercms.com/plugin/inetis-localize',
         ];
     }
 

@@ -1,5 +1,5 @@
 # Localize
-New artisan command to create language file from Yaml key
+New artisan command to generate language files from localization strings inside Yaml files
 
 This command will scan all your Yaml files. It will look for new language keys and add them into your `lang/{lang-code}/lang.php` file. 
 
