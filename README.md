@@ -1,10 +1,10 @@
-# Localize
-New artisan command to generate language files from localization strings inside Yaml files
+# About
+OctoberCMS plugin to scaffold language files from localization strings in YAML files.
 
-This command will scan all your Yaml files. It will look for new language keys and add them into your `lang/{lang-code}/lang.php` file. 
+Adds the `artisan localize:addstrings {Author.Plugin} {lang-code}` command that will scan all the YAML files in `{Author.Plugin}` for language keys and add them to the `/plugins/{author}/{plugin}/lang/{lang-code}/lang.php` file.
 
-By example if you have the following file inside your plugin, this command will add the `inetis.testplugin::lang.user.name` 
-string to your lang file with for default value `NEW_name` that help you to quickly find not already translated items.
+For example, if you have the following file inside your plugin this command will add the `inetis.testplugin::lang.user.name` 
+string to the language file with the default value `NEW_name`. This helps with finding language keys that haven't been translated yet.
 
 ```yaml
 user_name:
@@ -14,22 +14,20 @@ user_name:
     tab : Profile
 ```
 
-## Command
+## Usage
 ```
-php artisan localize:addstrings {Plugin.Name} {Lang}
+php artisan localize:addstrings {Author.Plugin} {lang-code}
 ```
 
-Parameter | Definition | Exemple 
+Parameter | Explanation | Example 
 ------------- | ------------- | -------------
-First | name of the plugin | Rainlab.Page
+First | name of the plugin | Rainlab.Pages
 Second | language abbreviation | en
 
-If the destination language doesn't exist. This plugin will create it.
+If the destination language doesn't exist, this command will create it.
 
-
-## Dependency 
-This plugin required *Rainlab.Builder*
+## Dependencies
+This plugin requires [*Rainlab.Builder*](https://octobercms.com/plugin/rainlab-builder)
 
 ## Author
 inetis is a webdesign agency in Vufflens-la-Ville, Switzerland. We love coding and creating powerful apps and sites  [see our website](https://inetis.ch).
-
